@@ -1,5 +1,9 @@
 # Installation
 
+pip install ncbi_asm_summary
+
+or
+
 ```sh
 git clone https://github.com/evoquant/ncbi_asm_summary.git
 cd ncbi_asm_summary
