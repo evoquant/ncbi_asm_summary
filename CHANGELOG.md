@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/evoquant/ncbi_asm_summary/compare/v0.2.0...v0.2.1) (2025-06-27)
+
+
+### Bug Fixes
+
+* . ([2819627](https://github.com/evoquant/ncbi_asm_summary/commit/28196271491c4bdc3b5d40169b0f22eceb17a7c5))
+
 ## [0.2.0](https://github.com/evoquant/ncbi_asm_summary/compare/v0.2.0...v0.2.0) (2025-06-27)
 
 
