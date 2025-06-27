@@ -114,7 +114,7 @@ def main():
     nrows = args.nrows - 1
     row_count = 0
     logging.info(
-        f"First {nrows + 1} rows, assembly and FTP columns, from {Path(args.file_path).stem if args.file_path else args.db}..."
+        f"First {nrows + 1} rows, from {Path(args.file_path).stem if args.file_path else args.db}..."
     )
     # Header is done this way because  otherwise the log info of 
     # the streaming download will print in between it and the other data
