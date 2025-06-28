@@ -1,16 +1,13 @@
 import argparse
 import gzip
 
-# logging
 import logging
 from pathlib import Path
 
 from ncbi_asm_summary.downloader import GenomeSummaryDownloader
 from ncbi_asm_summary.parser import tableRow
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logger = logging.getLogger(__name__)
 
 
 class AssemblySummaryStream:
@@ -113,7 +110,7 @@ def main():
     stream = AssemblySummaryStream(file_path=args.file_path, db=args.db)
     nrows = args.nrows - 1
     row_count = 0
-    logging.info(
+    logger.info(
         f"First {nrows + 1} rows, from {Path(args.file_path).stem if args.file_path else args.db}..."
     )
     # Header is done this way because  otherwise the log info of 

@@ -6,9 +6,8 @@ from pathlib import Path
 import requests
 from tqdm import tqdm
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logger = logging.getLogger(__name__)
+
 
 
 class GenomeSummaryDownloader:
@@ -81,7 +80,7 @@ class GenomeSummaryDownloader:
         :param chunk_size: Size of chunks to read from the response.
         :yields: One decoded line (str) at a time.
         """
-        logging.info(f"Streaming download from {self.url}")
+        logger.info(f"Streaming download from {self.url}")
         with requests.get(self.url, stream=True, timeout=timeout) as response:
             response.raise_for_status()
             # Use an iterator over the response content
