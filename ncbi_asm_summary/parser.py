@@ -1,6 +1,7 @@
 from dataclasses import field, make_dataclass
 
 header_tuple = (
+    "index",
     "assembly_accession",
     "bioproject",
     "biosample",
@@ -42,7 +43,9 @@ header_tuple = (
 )
 
 tableRow = make_dataclass(
-    "AssemblySummary", [(name, str, field(default=None)) for name in header_tuple]
+    "AssemblySummary",
+    [(name, str, field(default=None)) for name in header_tuple],
+    slots=True
 )
 
 
