@@ -22,7 +22,7 @@ class AssemblySummaryStream:
         self.db = db
 
     def _read_line(self, line):
-        yield tableRow(*[i.strip() for i in line.split("\t")])
+        yield tableRow.from_list([i.strip() for i in line.split("\t")])
 
     def _is_gzipped(self):
         try:

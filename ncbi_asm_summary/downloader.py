@@ -72,7 +72,8 @@ class GenomeSummaryDownloader:
                     decoded = decoded.lstrip("#")
                     begin = True
                 if begin:
-                    out_f.write(decoded)
+                    # make sure encoded as bytes
+                    out_f.write(decoded.encode("utf-8"))
 
     def streaming_output(self, timeout: int = 10, chunk_size: int = 8192):
         """
