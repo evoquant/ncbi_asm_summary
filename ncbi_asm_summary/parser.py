@@ -1,4 +1,5 @@
-from dataclasses import field, make_dataclass
+from dataclasses import dataclass, field, make_dataclass
+from typing import Optional, ClassVar
 
 header_tuple = (
     "assembly_accession",
@@ -41,14 +42,25 @@ header_tuple = (
     "pubmed_id",
 )
 
+# Create the dataclass with all fields optional
 tableRow = make_dataclass(
-    "AssemblySummary", [(name, str, field(default=None)) for name in header_tuple]
+    "AssemblySummary",
+    [(name, Optional[str], field(default=None)) for name in header_tuple],
+    slots=True
 )
 
+# Add the class method
+@classmethod
+def from_list(cls, values):
+    if len(values) != len(header_tuple):
+        raise ValueError(f"Expected {len(header_tuple)} values, got {len(values)}.")
+    return cls(*values)
 
+# Add a cleaner __repr__ method
 def __repr__(self):
     col1_width = 20
     return f"{self.assembly_accession.ljust(col1_width)}  {self.ftp_path}"
 
-
+# Assign the methods to the class
+tableRow.from_list = from_list
 tableRow.__repr__ = __repr__

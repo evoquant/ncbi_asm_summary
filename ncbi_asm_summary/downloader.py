@@ -1,3 +1,4 @@
+from datetime import date
 import gzip
 import logging
 from hashlib import md5
@@ -36,40 +37,43 @@ class GenomeSummaryDownloader:
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()
 
-    def _full_download(
-        self, url: str, dest: Path, timeout: int = 10, chunk_size: int = 8192
+    def full_download(
+        self, dir: Path, timeout: int = 10, chunk_size: int = 8192
     ) -> None:
         """
         Download a file from the given URL to the specified destination with progress bar.
 
         :param url: URL of the file to download.
-        :param dest: Destination path to save the downloaded file.
+        :param dir: Destination directory to save the downloaded file.
         :param timeout: Timeout for the request in seconds.
         :param chunk_size: Size of each chunk to read from the response.
         """
-        print(f"Downloading {url} to {dest}")
-        response = requests.get(url, stream=True, timeout=timeout)
+        # add current date to filename
+        filename = f"{Path(self.file).stem}_{date.today().strftime('%Y-%m-%d')}.txt.gz"
+        dest = Path(dir, filename)
+        response = requests.get(self.url, stream=True, timeout=timeout)
         response.raise_for_status()
         total = int(response.headers.get("content-length", 0))
         # Create a buffer to read and decode gzip content on the fly
         decompressor = gzip.GzipFile(fileobj=response.raw)
-        # Output gzip file
+        # Output gzip file, cleaning the header 
         with (
             gzip.open(dest, "wb") as out_f,
             tqdm(total=total, unit="B", unit_scale=True, desc=dest.name) as pbar,
         ):
-            modified = 0
+            begin = False
             # Read lines from the decompressed stream
             for line in decompressor:
                 pbar.update(len(line))
                 # Modify the first 5 lines if necessary
-                if modified < 5:
-                    decoded = line.decode("utf-8")
-                    if decoded.startswith("#assembly_accession\t"):
-                        decoded = decoded.lstrip("#")
-                    line = decoded.encode("utf-8")
-                    modified += 1
-                out_f.write(line)
+                decoded = line.decode("utf-8")
+                if not begin and (decoded.startswith("#assembly_accession\t") or decoded.startswith("assembly_accession\t")):
+                    # Remove the leading '#' from the header line
+                    decoded = decoded.lstrip("#")
+                    begin = True
+                if begin:
+                    # make sure encoded as bytes
+                    out_f.write(decoded.encode("utf-8"))
 
     def streaming_output(self, timeout: int = 10, chunk_size: int = 8192):
         """
